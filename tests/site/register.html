@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head><meta charset="UTF-8"><title>Đăng ký - Trang thử nghiệm</title></head>
+<body>
+  <!-- Form dùng HTML5 validation: dùng để kiểm thử chức năng tự sinh test case -->
+  <h1>Đăng ký tài khoản</h1>
+  <form id="reg">
+    <label for="fullname">Họ tên</label><input id="fullname" required maxlength="10">
+    <label for="email">Email</label><input id="email" type="email" required>
+    <label for="age">Tuổi</label><input id="age" type="number" min="18" max="60">
+    <button type="submit">Đăng ký</button>
+  </form>
+  <div id="ok" class="alert alert-success" style="display:none">Đăng ký thành công!</div>
+  <select id="sort" aria-label="Sắp xếp">
+    <option value="az">A-Z</option>
+    <option value="za">Z-A</option>
+  </select>
+  <a id="to-login" href="login.html">Đã có tài khoản</a>
+  <script>
+    document.getElementById('reg').addEventListener('submit', function (e) {
+      e.preventDefault();
+      document.getElementById('ok').style.display = 'block';
+    });
+  </script>
+</body>
+</html>

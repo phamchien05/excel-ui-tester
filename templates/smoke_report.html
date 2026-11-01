@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Kiểm tra nhanh - {{ r.url }}{% endblock %}
+
+{% block style %}
+  .verdict { font-size: 15px; margin-top: 6px; }
+  .checks td:first-child { font-weight: 600; }
+  .shots { display: grid; grid-template-columns: 1fr 1.6fr 2.4fr; gap: 16px; align-items: start; }
+  .shots figure { margin: 0; }
+  .shots figcaption { font-weight: 600; margin-bottom: 6px; }
+  .shots img.thumb { max-width: 100%; max-height: 520px; object-fit: cover; object-position: top; margin: 0; }
+  .scroll { max-height: 420px; overflow: auto; }
+  tr.bad td { background: var(--fail-bg); }
+  td.url { word-break: break-all; }
+  @media (max-width: 800px) { .shots { grid-template-columns: 1fr; } }
+{% endblock %}
+
+{% block header %}
+  <h1>Kiểm tra nhanh: {{ r.title or r.url }}</h1>
+  <div class="meta">
+    <span>🔗 URL: {{ r.url }}</span>
+    {% if r.final_url and r.final_url != r.url %}<span>↪ Chuyển hướng tới: {{ r.final_url }}</span>{% endif %}
+    <span>🌐 Trình duyệt: {{ r.browser }}</span>
+    <span>🕒 {{ r.start_time.strftime("%d/%m/%Y %H:%M:%S") }}</span>
+  </div>
+{% endblock %}
+
+{% block content %}
+{% set labels = {"PASS": "Đạt", "FAIL": "Lỗi", "WARN": "Cảnh báo"} %}
+
+<!-- ===== Tổng quan ===== -->
+<div class="stats" style="margin-top:20px">
+  <div class="stat {{ 'pass' if r.overall == 'PASS' else 'fail' }}">
+    <div class="label">Kết luận</div><div class="num">{{ labels[r.overall] }}</div></div>
+  <div class="stat"><div class="label">Thời gian tải trang</div><div class="num">{{ "%.2f"|format(r.load_time) }}s</div></div>
+  <div class="stat"><div class="label">DOM sẵn sàng</div><div class="num">{{ "%.2f"|format(r.dom_ready_time) }}s</div></div>
+  <div class="stat {{ 'fail' if r.broken_links else 'pass' }}"><div class="label">Link lỗi / đã kiểm tra</div>
+    <div class="num">{{ r.broken_links|length }} / {{ r.links|length }}</div></div>
+  <div class="stat {{ 'fail' if r.broken_images else 'pass' }}"><div class="label">Ảnh lỗi / tổng ảnh</div>
+    <div class="num">{{ r.broken_images|length }} / {{ r.images|length }}</div></div>
+  <div class="stat {{ 'fail' if r.console_errors else 'pass' }}"><div class="label">Lỗi JavaScript</div>
+    <div class="num">{{ r.console_errors|length }}</div></div>
+</div>
+
+<h2>Các hạng mục kiểm tra</h2>
+<div class="card">
+  <table class="checks">
+    <thead><tr><th>Hạng mục</th><th>Kết quả</th><th>Chi tiết</th></tr></thead>
+    <tbody>
+    {% for c in r.checks %}
+      <tr><td>{{ c.name }}</td><td><span class="badge {{ c.status }}">{{ labels[c.status] }}</span></td>
+          <td>{{ c.detail }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- ===== Ảnh chụp 3 kích thước ===== -->
+{% if r.screenshots %}
+<h2>Ảnh chụp giao diện ở các kích thước màn hình <span class="muted" style="font-weight:normal;font-size:13px">(bấm để phóng to)</span></h2>
+<div class="shots">
+  {% for name, path in r.screenshots.items() %}
+  <figure class="card">
+    <figcaption>{{ name }}</figcaption>
+    {% if path %}<img class="thumb" src="{{ path | img_data }}" alt="{{ name }}">
+    {% else %}<span class="error-text">Không chụp được ảnh</span>{% endif %}
+  </figure>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- ===== Lỗi JavaScript ===== -->
+<h2>Lỗi JavaScript trong console ({{ r.console_errors|length }})</h2>
+<div class="card scroll">
+  {% if r.console_errors %}
+  <table><tbody>
+    {% for e in r.console_errors %}<tr class="bad"><td>{{ loop.index }}</td><td><code>{{ e }}</code></td></tr>{% endfor %}
+  </tbody></table>
+  {% else %}<span class="muted">Không có lỗi JavaScript nào.</span>{% endif %}
+</div>
+
+<!-- ===== Link ===== -->
+<h2>Kiểm tra link ({{ r.links|length }} link{% if r.links_total_found > r.links|length %}, trong tổng số {{ r.links_total_found }} link tìm thấy{% endif %})</h2>
+<div class="card scroll">
+  {% if r.links %}
+  <table>
+    <thead><tr><th>#</th><th>URL</th><th>Mã HTTP</th><th>Kết quả</th><th class="num">Thời gian</th></tr></thead>
+    <tbody>
+    {# Hiện link lỗi lên đầu #}
+    {% for l in r.links|sort(attribute="ok") %}
+      <tr class="{{ '' if l.ok else 'bad' }}">
+        <td>{{ loop.index }}</td>
+        <td class="url"><a href="{{ l.url }}" target="_blank" rel="noopener">{{ l.url }}</a></td>
+        <td>{{ l.status if l.status else "-" }}</td>
+        <td>{% if l.ok %}<span class="badge PASS">Đạt</span>{% else %}<span class="badge FAIL">Lỗi</span>
+            {% if l.error %}<div class="error-text">{{ l.error }}</div>{% endif %}{% endif %}</td>
+        <td class="num">{{ "%.2f"|format(l.duration) }}s</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}<span class="muted">Không tìm thấy link nào trên trang.</span>{% endif %}
+</div>
+
+<!-- ===== Ảnh ===== -->
+<h2>Kiểm tra ảnh ({{ r.images|length }} ảnh)</h2>
+<div class="card scroll">
+  {% if r.images %}
+  <table>
+    <thead><tr><th>#</th><th>Nguồn ảnh (src)</th><th>Thuộc tính alt</th><th>Tải ảnh</th></tr></thead>
+    <tbody>
+    {% for i in r.images %}
+      <tr class="{{ 'bad' if i.broken else '' }}">
+        <td>{{ loop.index }}</td>
+        <td class="url"><code>{{ i.src[:150] }}{% if i.src|length > 150 %}...{% endif %}</code></td>
+        <td>{% if i.alt is none %}<span class="badge WARN">Thiếu alt</span>
+            {% elif i.alt == "" %}<span class="muted">alt rỗng (ảnh trang trí)</span>
+            {% else %}{{ i.alt }}{% endif %}</td>
+        <td>{% if i.broken %}<span class="badge FAIL">Lỗi</span><div class="error-text">{{ i.reason }}</div>
+            {% else %}<span class="badge PASS">Đạt</span>{% endif %}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}<span class="muted">Trang không có ảnh nào.</span>{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+# Cấu hình đo độ phủ code (coverage)
+# Chạy:  python -m pytest --cov --cov-report=term-missing --cov-report=html
+[run]
+source = core
+# Playwright sync API chạy trên greenlet -> phải khai báo để coverage không bỏ sót dòng
+concurrency = thread,greenlet
+# Đo cả độ phủ nhánh (mỗi if/else, vòng lặp đều phải đi qua cả hai hướng)
+branch = true
+
+[report]
+show_missing = true
+
+[html]
+directory = reports/coverage
+title = Độ phủ code - Công cụ kiểm thử giao diện Web

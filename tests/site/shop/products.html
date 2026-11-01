@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head><meta charset="UTF-8"><title>Sản phẩm - Shop thử nghiệm</title><script src="common.js"></script></head>
+<body>
+  <nav>
+    <a id="nav-home" href="index.html">Trang chủ</a>
+    <a id="nav-products" href="products.html">Sản phẩm</a>
+    <a id="nav-contact" href="contact.html">Liên hệ</a>
+    <a id="nav-logout" href="logout.html">Đăng xuất</a>
+    <div class="search"><input id="q" placeholder="Tìm kiếm"><button id="search-btn">Tìm</button></div>
+  </nav>
+  <div id="search-result" class="message" style="display:none"></div>
+  <h1>Sản phẩm</h1>
+
+  <!-- Các điều khiển nằm ngoài form: dùng để kiểm thử chức năng sinh test cho nút bấm (phần C) -->
+  <select id="sort" aria-label="Sắp xếp"><option value="az">Tên A-Z</option><option value="price">Giá tăng dần</option></select>
+  <label><input type="checkbox" id="in-stock"> Chỉ hàng còn</label>
+  <span id="result-count">Hiển thị 3 sản phẩm</span>
+  <span>Giỏ hàng: <b id="cart-count">0</b></span>
+
+  <div class="product"><h3>Áo thun</h3><button id="add-1">Thêm vào giỏ</button>
+    <button id="detail-1">Xem chi tiết</button></div>
+  <div class="product"><h3>Quần jean</h3><button id="add-2">Thêm vào giỏ</button></div>
+
+  <button id="btn-noop">Làm mới</button>
+  <button id="btn-broken">Báo lỗi</button>
+  <button id="btn-delete-account">Xóa tài khoản</button>
+
+  <div id="modal" style="display:none">Chi tiết sản phẩm Áo thun</div>
+
+  <script>
+    var count = 0;
+    ['add-1', 'add-2'].forEach(function (id) {
+      document.getElementById(id).addEventListener('click', function () {
+        count += 1;
+        document.getElementById('cart-count').textContent = count;
+      });
+    });
+    document.getElementById('detail-1').addEventListener('click', function () {
+      document.getElementById('modal').style.display = 'block';
+    });
+    document.getElementById('in-stock').addEventListener('change', function () {
+      document.getElementById('result-count').textContent = this.checked ? 'Hiển thị 2 sản phẩm' : 'Hiển thị 3 sản phẩm';
+    });
+    document.getElementById('btn-broken').addEventListener('click', function () {
+      undefinedFunction();  // Cố ý gây lỗi JavaScript
+    });
+    document.getElementById('btn-delete-account').addEventListener('click', function () {
+      localStorage.clear();
+      document.body.innerHTML = 'Tài khoản đã bị xóa';
+    });
+  </script>
+</body>
+</html>

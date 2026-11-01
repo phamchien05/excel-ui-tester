@@ -1,0 +1,60 @@
+# Theme gốc của giao diện: nền đen + xanh dương nhấn (phong cách dashboard kỹ thuật).
+# Bảng màu đầy đủ nằm trong assets/style.css (biến CSS) và ui.py (dùng cho bảng, biểu đồ).
+[client]
+toolbarMode = "minimal"            # Ẩn nút Deploy và menu dành cho lập trình viên
+
+[browser]
+gatherUsageStats = false
+
+[theme]
+base = "dark"
+primaryColor = "#3B82F6"
+backgroundColor = "#0A0A0B"
+secondaryBackgroundColor = "#0F1012"   # Nền ô nhập, ô chọn, ô tải file
+textColor = "#F4F4F5"
+borderColor = "#24262B"
+showWidgetBorder = true
+showSidebarBorder = true
+linkColor = "#3B82F6"
+linkUnderline = false
+
+font = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+headingFont = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+codeFont = "JetBrains Mono:https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
+codeFontSize = "12px"
+codeTextColor = "#93C5FD"
+codeBackgroundColor = "#1A1C20"
+baseFontSize = 14
+baseRadius = "8px"
+buttonRadius = "8px"
+headingFontSizes = ["24px", "18px", "15px", "15px", "14px", "14px"]
+headingFontWeights = [700, 600, 600, 600, 600, 600]
+metricValueFontSize = "28px"
+metricValueFontWeight = 700
+
+dataframeBorderColor = "#24262B"
+dataframeHeaderBackgroundColor = "#0F1012"
+dataframeHeaderTextColor = "#71717A"
+
+# Màu huy hiệu trạng thái (:green-badge[...], :red-badge[...]...)
+greenColor = "#22C55E"
+greenTextColor = "#22C55E"
+greenBackgroundColor = "rgba(34,197,94,0.12)"
+redColor = "#EF4444"
+redTextColor = "#EF4444"
+redBackgroundColor = "rgba(239,68,68,0.12)"
+orangeColor = "#F59E0B"
+orangeTextColor = "#F59E0B"
+orangeBackgroundColor = "rgba(245,158,11,0.12)"
+blueColor = "#3B82F6"
+blueTextColor = "#60A5FA"
+blueBackgroundColor = "rgba(59,130,246,0.12)"
+grayColor = "#A1A1AA"
+grayTextColor = "#A1A1AA"
+grayBackgroundColor = "rgba(161,161,170,0.12)"
+
+chartCategoricalColors = ["#3B82F6", "#22C55E", "#EF4444", "#F59E0B", "#A1A1AA"]
+
+[theme.sidebar]
+backgroundColor = "#0F1012"
+secondaryBackgroundColor = "#0F1012"

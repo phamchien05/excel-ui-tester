@@ -1,0 +1,4 @@
+Bao_cao_BTL_kiem_thu.docx : bao cao Word da chen du anh. Mo Word, bam chuot phai vao Muc luc -> Update Field -> Update entire table de cap nhat so trang.
+Ban online: https://claude.ai/artifact/2iCMpiU7eNJkDRec2WMT1W
+drawio/ : file goc so do, mo bang https://app.diagrams.net (File > Open from > Device) de sua, roi File > Export as > PNG.
+anh/    : anh PNG da chen vao bao cao.

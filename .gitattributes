@@ -1,0 +1,8 @@
+# Tự chuẩn hóa xuống dòng cho file văn bản
+* text=auto
+# File nhị phân: không chuyển đổi xuống dòng (tránh làm hỏng file)
+*.avif binary
+*.pdf binary
+*.png binary
+*.xlsx binary
+*.docx binary

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Logo: cửa sổ trình duyệt + dấu tích (kiểm thử giao diện Web) — nền đen, nét xanh -->
+  <defs>
+    <linearGradient id="qa-logo-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1A1C20"/>
+      <stop offset="1" stop-color="#0A0A0B"/>
+    </linearGradient>
+    <linearGradient id="qa-logo-stroke" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#60A5FA"/>
+      <stop offset="1" stop-color="#2563EB"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="62" height="62" rx="14" fill="url(#qa-logo-bg)" stroke="#24262B" stroke-width="2"/>
+  <rect x="13" y="16" width="38" height="32" rx="5" fill="none" stroke="url(#qa-logo-stroke)" stroke-width="3"/>
+  <line x1="13" y1="24.5" x2="51" y2="24.5" stroke="url(#qa-logo-stroke)" stroke-width="3"/>
+  <circle cx="18.5" cy="20.3" r="1.6" fill="#3B82F6"/>
+  <circle cx="23.5" cy="20.3" r="1.6" fill="#3B82F6"/>
+  <polyline points="23,36 29.5,42 41.5,30" fill="none" stroke="#60A5FA" stroke-width="3.6"
+            stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

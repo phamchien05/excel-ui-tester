@@ -1,0 +1,4 @@
+# Thư viện cho việc kiểm thử chính công cụ (unit test + đo độ phủ code)
+-r requirements.txt
+pytest>=8.0
+pytest-cov>=5.0

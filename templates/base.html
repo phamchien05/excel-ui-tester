@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Báo cáo kiểm thử{% endblock %}</title>
+<style>
+  :root {
+    --bg: #f4f6fa; --card: #ffffff; --text: #1f2937; --muted: #6b7280; --border: #e5e7eb;
+    --pass: #16a34a; --pass-bg: #dcfce7; --fail: #dc2626; --fail-bg: #fee2e2;
+    --skip: #9ca3af; --skip-bg: #f3f4f6; --warn: #d97706; --warn-bg: #fef3c7;
+    --primary: #2f5597;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg);
+         color: var(--text); font-size: 14px; line-height: 1.5; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 24px 16px 48px; }
+  header.top { background: var(--primary); color: #fff; padding: 20px 0; }
+  header.top h1 { margin: 0 0 4px; font-size: 22px; }
+  header.top .meta { opacity: .85; font-size: 13px; display: flex; flex-wrap: wrap; gap: 4px 20px; }
+  h2 { font-size: 17px; margin: 28px 0 12px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+
+  /* Ô thống kê */
+  .summary { display: grid; grid-template-columns: 220px 1fr; gap: 16px; margin-top: 20px; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .stat .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .03em; }
+  .stat .num { font-size: 26px; font-weight: 700; margin-top: 2px; }
+  .stat.pass .num { color: var(--pass); } .stat.fail .num { color: var(--fail); }
+  .chart { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .legend { display: flex; gap: 14px; margin-top: 8px; font-size: 13px; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; }
+
+  /* Nhãn trạng thái */
+  .badge { display: inline-block; white-space: nowrap; padding: 1px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .badge.PASS { background: var(--pass-bg); color: var(--pass); }
+  .badge.FAIL { background: var(--fail-bg); color: var(--fail); }
+  .badge.SKIP { background: var(--skip-bg); color: var(--skip); }
+  .badge.WARN { background: var(--warn-bg); color: var(--warn); }
+
+  /* Bảng */
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { background: #f9fafb; font-size: 12px; color: var(--muted); text-transform: uppercase; }
+  td.num, th.num { text-align: right; white-space: nowrap; }
+  code { font-family: Consolas, monospace; font-size: 12.5px; background: #f3f4f6; padding: 1px 5px;
+         border-radius: 4px; word-break: break-all; }
+  .error-text { color: var(--fail); font-size: 13px; }
+  .muted { color: var(--muted); }
+  img.thumb { max-width: 240px; max-height: 150px; border: 1px solid var(--border); border-radius: 6px;
+              cursor: zoom-in; display: block; margin-top: 6px; }
+
+  /* Ảnh phóng to */
+  #lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.8); z-index: 100;
+              align-items: center; justify-content: center; padding: 24px; cursor: zoom-out; }
+  #lightbox img { max-width: 100%; max-height: 100%; border-radius: 6px; background: #fff; }
+  #lightbox.show { display: flex; }
+
+  footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 40px; }
+  @media (max-width: 700px) { .summary { grid-template-columns: 1fr; } .stats { grid-template-columns: repeat(2, 1fr); } }
+  {% block style %}{% endblock %}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="container" style="padding-top:0;padding-bottom:0">
+    {% block header %}{% endblock %}
+  </div>
+</header>
+<div class="container">
+  {% block content %}{% endblock %}
+  <footer>Sinh tự động bởi Công cụ kiểm thử giao diện Web theo kịch bản Excel · {{ generated_at }}</footer>
+</div>
+
+<div id="lightbox" onclick="this.classList.remove('show')"><img alt="Ảnh phóng to"></div>
+<script>
+  // Bấm vào ảnh nhỏ để xem ảnh lớn
+  document.querySelectorAll('img.thumb').forEach(function (img) {
+    img.addEventListener('click', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      var box = document.getElementById('lightbox');
+      box.querySelector('img').src = img.src;
+      box.classList.add('show');
+    });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('show');
+  });
+</script>
+{% block script %}{% endblock %}
+</body>
+</html>

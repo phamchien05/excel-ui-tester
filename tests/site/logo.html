@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <title>Link chỉ có ảnh - Trang thử nghiệm</title>
+</head>
+<body>
+  <!-- Giống đầu trang parabank: 2 link logo dùng CÙNG ảnh, CÙNG alt, chỉ khác class của ảnh -->
+  <div id="top">
+    <a href="login.html"><img class="admin" src="anh/logo.svg" alt="Cửa hàng" width="120" height="40"></a>
+    <a href="home.html"><img class="logo" src="anh/logo.svg" alt="Cửa hàng" width="120" height="40"></a>
+  </div>
+
+  <div class="icons">
+    <!-- alt riêng -->
+    <a href="widgets.html"><img src="anh/gio-hang.svg" alt="Giỏ hàng" width="40" height="40"></a>
+    <!-- Không có alt, nhưng tên file ảnh riêng -->
+    <a href="register.html"><img src="anh/dang-ky.svg" width="40" height="40"></a>
+    <!-- Không có gì để phân biệt (ảnh trùng, không alt, không class) -> buộc dùng vị trí nth-of-type -->
+    <a href="format.html"><img src="anh/logo.svg" width="40" height="40"></a>
+  </div>
+
+  <!-- Ảnh định vị riêng -> thẻ <a> có kích thước 0, không bấm được (như logo parabank) -> phải bấm vào ảnh -->
+  <div class="noi"><a href="shop/login.html"><img style="position:absolute;top:8px;left:400px" src="anh/logo.svg" alt="Logo nổi" width="120" height="40"></a></div>
+
+  <!-- Chân trang có link chữ trùng href với các link ảnh -> không dùng được a[href=...] -->
+  <p>
+    <a href="login.html">Đăng nhập</a> | <a href="home.html">Trang chủ</a> | <a href="widgets.html">Thành phần</a> |
+    <a href="register.html">Đăng ký</a> | <a href="format.html">Định dạng</a> |
+    <a href="shop/login.html">Cửa hàng</a>
+  </p>
+</body>
+</html>

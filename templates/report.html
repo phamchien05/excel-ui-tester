@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Báo cáo kiểm thử - {{ r.name }}{% endblock %}
+
+{% block style %}
+  .toolbar { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .toolbar button { border: 1px solid var(--border); background: var(--card); padding: 6px 14px;
+                    border-radius: 999px; cursor: pointer; font-size: 13px; }
+  .toolbar button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+  /* Mỗi test case là một khối có thể bấm mở/đóng */
+  details.case { background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+                 margin-bottom: 8px; overflow: hidden; }
+  details.case.FAIL { border-left: 4px solid var(--fail); }
+  details.case.PASS { border-left: 4px solid var(--pass); }
+  details.case summary { list-style: none; cursor: pointer; padding: 12px 16px;
+                         display: grid; grid-template-columns: 40px 1fr 80px 80px 20px; gap: 10px; align-items: center; }
+  details.case summary::-webkit-details-marker { display: none; }
+  details.case summary:hover { background: #f9fafb; }
+  details.case summary .arrow { transition: transform .2s; color: var(--muted); }
+  details.case[open] summary .arrow { transform: rotate(90deg); }
+  details.case .body { padding: 0 16px 16px; }
+  .case-name { font-weight: 600; }
+  .case-error { font-size: 13px; color: var(--fail); font-weight: normal; }
+
+  tr.step-FAIL td { background: var(--fail-bg); }
+  tr.step-SKIP td { color: var(--skip); }
+  .data-row { margin: 4px 0 10px; font-size: 13px; }
+{% endblock %}
+
+{% block header %}
+  <h1>Báo cáo kiểm thử: {{ r.name }}</h1>
+  <div class="meta">
+    <span>📄 File: {{ r.file_path }}</span>
+    <span>🌐 Trình duyệt: {{ r.browser }} ({{ "headless" if r.headless else "có giao diện" }})</span>
+    <span>🕒 Bắt đầu: {{ r.start_time.strftime("%d/%m/%Y %H:%M:%S") }}</span>
+  </div>
+{% endblock %}
+
+{% block content %}
+<!-- ===== Tổng quan ===== -->
+<div class="summary">
+  <div class="card chart">
+    {# Biểu đồ tròn vẽ bằng SVG: chu vi vòng tròn r=15.915 ≈ 100 nên độ dài nét = phần trăm #}
+    <svg width="160" height="160" viewBox="0 0 42 42" role="img" aria-label="Tỷ lệ pass/fail">
+      <circle cx="21" cy="21" r="15.915" fill="none" stroke="{{ '#dc2626' if r.total else '#e5e7eb' }}" stroke-width="6"></circle>
+      {% if r.passed %}
+      <circle cx="21" cy="21" r="15.915" fill="none" stroke="#16a34a" stroke-width="6"
+              stroke-dasharray="{{ r.pass_rate }} {{ 100 - r.pass_rate }}" stroke-dashoffset="25"></circle>
+      {% endif %}
+      <text x="21" y="21" text-anchor="middle" dominant-baseline="central" font-size="7" font-weight="700"
+            fill="#1f2937">{{ r.pass_rate }}%</text>
+    </svg>
+    <div class="legend">
+      <span><span class="dot" style="background:var(--pass)"></span>Pass {{ r.passed }}</span>
+      <span><span class="dot" style="background:var(--fail)"></span>Fail {{ r.failed }}</span>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="label">Tổng số test</div><div class="num">{{ r.total }}</div></div>
+    <div class="stat pass"><div class="label">Đạt (Pass)</div><div class="num">{{ r.passed }}</div></div>
+    <div class="stat fail"><div class="label">Lỗi (Fail)</div><div class="num">{{ r.failed }}</div></div>
+    <div class="stat"><div class="label">Tỷ lệ đạt</div><div class="num">{{ r.pass_rate }}%</div></div>
+    <div class="stat"><div class="label">Tổng thời gian</div><div class="num">{{ "%.2f"|format(r.duration) }}s</div></div>
+    <div class="stat"><div class="label">Tổng số bước</div><div class="num">{{ total_steps }}</div></div>
+  </div>
+</div>
+
+<!-- ===== Chi tiết từng test case ===== -->
+<h2>Chi tiết test case <span class="muted" style="font-weight:normal;font-size:13px">(bấm vào từng dòng để xem các bước)</span></h2>
+<div class="toolbar">
+  <button class="active" data-filter="ALL">Tất cả ({{ r.total }})</button>
+  <button data-filter="PASS">Pass ({{ r.passed }})</button>
+  <button data-filter="FAIL">Fail ({{ r.failed }})</button>
+  <button id="toggle-all">Mở / đóng tất cả</button>
+</div>
+
+{% for c in r.cases %}
+<details class="case {{ c.status }}" {% if c.status == "FAIL" %}open{% endif %}>
+  <summary>
+    <span class="muted">#{{ loop.index }}</span>
+    <span>
+      <span class="case-name">{{ c.name }}</span>
+      {% if c.error %}<div class="case-error">{{ c.error }}</div>{% endif %}
+    </span>
+    <span><span class="badge {{ c.status }}">{{ c.status }}</span></span>
+    <span class="num muted">{{ "%.2f"|format(c.duration) }}s</span>
+    <span class="arrow">▶</span>
+  </summary>
+  <div class="body">
+    {% if c.data_row %}
+    <div class="data-row"><b>Dữ liệu:</b>
+      {% for k, v in c.data_row.items() %}<code>{{ k }} = {{ v if v != "" else "(trống)" }}</code> {% endfor %}
+    </div>
+    {% endif %}
+    <table>
+      <thead>
+        <tr><th>Bước</th><th>Từ khóa</th><th>Selector</th><th>Giá trị</th><th>Mô tả</th>
+            <th>Kết quả</th><th class="num">Thời gian</th></tr>
+      </thead>
+      <tbody>
+      {% for s in c.steps %}
+        <tr class="step-{{ s.status }}">
+          <td>{{ s.step_no }}</td>
+          <td><b>{{ s.keyword }}</b></td>
+          <td>{% if s.selector %}<code>{{ s.selector }}</code>{% endif %}</td>
+          <td>{% if s.value %}<code>{{ s.value }}</code>{% endif %}</td>
+          <td>
+            {{ s.description }}
+            {% if s.error %}<div class="error-text">⚠ {{ s.error }}</div>{% endif %}
+            {% if s.screenshot %}<img class="thumb" src="{{ s.screenshot | img_data }}" alt="Ảnh chụp bước {{ s.step_no }}">{% endif %}
+          </td>
+          <td><span class="badge {{ s.status }}">{{ {"PASS": "Đạt", "FAIL": "Lỗi", "SKIP": "Bỏ qua"}[s.status] }}</span></td>
+          <td class="num">{{ "%.2f"|format(s.duration) if s.status != "SKIP" else "-" }}{{ "s" if s.status != "SKIP" else "" }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</details>
+{% endfor %}
+{% endblock %}
+
+{% block script %}
+<script>
+  // Lọc test case theo trạng thái
+  document.querySelectorAll('.toolbar button[data-filter]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.toolbar button[data-filter]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      var f = btn.dataset.filter;
+      document.querySelectorAll('details.case').forEach(function (d) {
+        d.style.display = (f === 'ALL' || d.classList.contains(f)) ? '' : 'none';
+      });
+    });
+  });
+  // Mở hoặc đóng tất cả test case
+  document.getElementById('toggle-all').addEventListener('click', function () {
+    var all = document.querySelectorAll('details.case');
+    var anyClosed = Array.from(all).some(d => !d.open);
+    all.forEach(d => d.open = anyClosed);
+  });
+</script>
+{% endblock %}

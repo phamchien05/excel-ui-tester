@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head><meta charset="UTF-8"><title>Đăng nhập - Trang thử nghiệm</title></head>
+<body>
+  <!-- Trang đăng nhập dùng cho unit test. Tài khoản đúng: admin / 123456 -->
+  <h1>Đăng nhập</h1>
+  <form id="login-form" aria-label="Đăng nhập">
+    <label for="username">Tên đăng nhập</label>
+    <input id="username" name="username" type="text">
+    <label for="password">Mật khẩu</label>
+    <input id="password" name="password" type="password">
+    <button id="login-btn" type="submit">Đăng nhập</button>
+  </form>
+  <div id="error" class="error" style="display:none"></div>
+  <script>
+    document.getElementById('login-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var u = document.getElementById('username').value;
+      var p = document.getElementById('password').value;
+      var err = document.getElementById('error');
+      var show = function (msg) { err.textContent = msg; err.style.display = 'block'; };
+      if (!u) return show('Vui lòng nhập tên đăng nhập');
+      if (!p) return show('Vui lòng nhập mật khẩu');
+      if (u === 'admin' && p === '123456') { location.href = 'home.html'; return; }
+      show('Sai tên đăng nhập hoặc mật khẩu');
+    });
+  </script>
+</body>
+</html>

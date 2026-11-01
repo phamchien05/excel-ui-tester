@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+reports/*
+!reports/.gitkeep
+!reports/vi_du_saucedemo/
+.coverage
+.pytest_cache/
+
+# File tạm của Word/Office khi đang mở tài liệu
+~$*
+~WRL*.tmp

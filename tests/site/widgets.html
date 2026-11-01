@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head><meta charset="UTF-8"><title>Thành phần - Trang thử nghiệm</title></head>
+<body>
+  <!-- Trang chứa các thành phần để kiểm thử từng từ khóa -->
+  <h1>Các thành phần</h1>
+
+  <input id="name" type="text" value="Giá trị ban đầu">
+
+  <select id="city">
+    <option value="hn">Hà Nội</option>
+    <option value="hcm">TP Hồ Chí Minh</option>
+    <option value="dn">Đà Nẵng</option>
+  </select>
+  <span id="city-result"></span>
+
+  <div id="hover-box" style="width:120px;height:40px;background:#ddd">Rê chuột vào đây</div>
+  <span id="hover-result"></span>
+
+  <input id="keys" type="text">
+  <span id="key-result"></span>
+
+  <button id="show-later">Hiện sau 0.5 giây</button>
+  <div id="late" style="display:none">Đã xuất hiện</div>
+
+  <div id="hidden-el" style="display:none">Phần tử ẩn</div>
+
+  <!-- Đếm số lần mở trang trong cùng phiên trình duyệt (kiểm tra tính độc lập giữa các test case) -->
+  <span id="visits"></span>
+
+  <a id="to-home" href="home.html">Về trang chủ</a>
+
+  <script>
+    document.getElementById('city').addEventListener('change', function () {
+      document.getElementById('city-result').textContent = 'Đã chọn: ' + this.value;
+    });
+    document.getElementById('hover-box').addEventListener('mouseenter', function () {
+      document.getElementById('hover-result').textContent = 'Đã rê chuột';
+    });
+    document.getElementById('keys').addEventListener('keydown', function (e) {
+      document.getElementById('key-result').textContent = 'Phím: ' + e.key;
+    });
+    document.getElementById('show-later').addEventListener('click', function () {
+      setTimeout(function () { document.getElementById('late').style.display = 'block'; }, 500);
+    });
+    var visits = Number(localStorage.getItem('visits') || 0) + 1;
+    localStorage.setItem('visits', visits);
+    document.getElementById('visits').textContent = 'Lượt xem: ' + visits;
+  </script>
+</body>
+</html>

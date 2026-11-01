@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head><meta charset="UTF-8"><title>Liên hệ - Shop thử nghiệm</title><script src="common.js"></script></head>
+<body>
+  <nav>
+    <a id="nav-home" href="index.html">Trang chủ</a>
+    <a id="nav-products" href="products.html">Sản phẩm</a>
+    <a id="nav-contact" href="contact.html">Liên hệ</a>
+    <a id="nav-logout" href="logout.html">Đăng xuất</a>
+    <div class="search"><input id="q" placeholder="Tìm kiếm"><button id="search-btn">Tìm</button></div>
+  </nav>
+  <div id="search-result" class="message" style="display:none"></div>
+  <h1>Liên hệ</h1>
+  <form id="contact" aria-label="Liên hệ">
+    <label for="fullname">Họ tên</label><input id="fullname" required>
+    <label for="email">Email</label><input id="email" type="email" required>
+    <label for="phone">Số điện thoại</label><input id="phone" type="tel">
+    <label for="topic">Chủ đề</label>
+    <select id="topic"><option value="">-- Chọn --</option><option value="hoi-dap">Hỏi đáp</option><option value="khieu-nai">Khiếu nại</option></select>
+    <label for="msg">Nội dung</label><textarea id="msg" maxlength="200"></textarea>
+    <label><input type="radio" name="method" id="method-email" value="email" required> Liên hệ qua email</label>
+    <label><input type="radio" name="method" id="method-phone" value="phone" required> Liên hệ qua điện thoại</label>
+    <label><input type="checkbox" id="agree" required> Đồng ý điều khoản</label>
+    <button type="submit">Gửi</button>
+  </form>
+  <div id="contact-ok" class="alert alert-success" style="display:none">Đã gửi liên hệ</div>
+  <script>
+    document.getElementById('contact').addEventListener('submit', function (e) {
+      e.preventDefault();
+      document.getElementById('contact-ok').style.display = 'block';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head><meta charset="UTF-8"><title>Kiểm tra nhanh - Trang thử nghiệm</title></head>
+<body>
+  <!-- Trang cố ý có lỗi để kiểm thử chức năng kiểm tra nhanh -->
+  <h1>Trang có lỗi</h1>
+  <a href="home.html">Link tốt</a>
+  <a href="khong-ton-tai.html">Link hỏng (404)</a>
+  <a href="#phan-duoi">Link neo (bị bỏ qua)</a>
+  <a href="mailto:test@example.com">Email (bị bỏ qua)</a>
+
+  <!-- Ảnh 1x1 điểm ảnh hợp lệ, có alt -->
+  <img id="ok-img" alt="Ảnh tốt"
+       src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==">
+  <!-- Ảnh hỏng -->
+  <img id="broken-img" alt="Ảnh hỏng" src="khong-co-anh.png">
+  <!-- Ảnh thiếu alt -->
+  <img id="no-alt" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==">
+
+  <script>
+    console.error('Lỗi thử nghiệm trong console');
+    setTimeout(function () { throw new Error('Lỗi chưa được bắt'); }, 0);
+  </script>
+</body>
+</html>
